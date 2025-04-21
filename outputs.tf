@@ -1,3 +1,4 @@
-output "ec2_instance_id" {
-  id = module.aws_instance.instance_id
+output "sns_topic_arn" {
+  description = "SNS topic ARN for EC2 alerts"
+  value       = aws_sns_topic.ec2_alerts.arn
 }
