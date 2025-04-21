@@ -3,8 +3,8 @@ REGION="us-west-2"
 THRESHOLD=70
 PROFILE="default"  # optional
 
-# ===== GET INSTANCE ID FROM TERRAFORM =====
-INSTANCE_ID=$(terraform output -raw ec2_instance_id)
+SNS_TOPIC_ARN=$(terraform output -raw sns_topic_arn)
+
 
 if [ -z "$INSTANCE_ID" ]; then
   echo " Could not retrieve instance ID from Terraform."
@@ -21,9 +21,17 @@ STATE=$(aws ec2 describe-instances \
   --output text \
   --profile "$PROFILE")
 
-echo "Instance state: $STATE"
+send_alert() {
+  local message="$1"
+  aws sns publish \
+    --topic-arn "$SNS_TOPIC_ARN" \
+    --message "$message" \
+    --subject "🚨 EC2 Monitoring Alert" \
+    --region "$REGION"
+}
+
 
 if [ "$STATE" != "running" ]; then
-  echo "Instance is not running. Exiting."
+  send_alert "❌ Instance $INSTANCE_ID is in '$STATE' state."
   exit 1
 fi
