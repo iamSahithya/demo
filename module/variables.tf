@@ -16,17 +16,6 @@ variable "key_name"{
 
 }
 
-variable "subnet_id"{
-    description = "subnetid"
-    type = string
-
-}
-
-variable "security_group_ids"{
-    description = "security group"
-    type = list(string)
-
-}
 
 variable "instance_name"{
     description = "instance name"
