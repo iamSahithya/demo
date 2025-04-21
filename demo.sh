@@ -4,6 +4,10 @@ THRESHOLD=70
 PROFILE="default"  # optional
 
 SNS_TOPIC_ARN=$(terraform output -raw sns_topic_arn)
+aws sns subscribe \
+  --topic-arn arn:aws:sns:us-west-2:257394482323:ec2-monitor-alerts \
+  --protocol email \
+  --notification-endpoint sahithya3098@gmail.com
 
 
 if [ -z "$INSTANCE_ID" ]; then
